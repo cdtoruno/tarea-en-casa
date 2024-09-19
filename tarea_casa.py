@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
 
 
 data = pd.read_csv('game_data_all.csv')
@@ -105,4 +107,29 @@ correlation_matrix = data_clean[['positive_reviews', 'negative_reviews', 'peak_p
 plt.figure(figsize=(8, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
 plt.title('Mapa de Calor de Correlaciones')
+plt.show()
+
+# Clustering
+
+kmeans = KMeans(n_clusters=3, random_state=42)
+
+# Ajustar el modelo a los datos escalados
+data_clean['cluster'] = kmeans.fit_predict(scaled_data)
+
+# Visualización del clustering para Positive Reviews vs Negative Reviews
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='positive_reviews', y='negative_reviews', hue='cluster', data=data_clean, palette='viridis', alpha=0.6)
+plt.title('Clustering K-Means: Positive Reviews vs Negative Reviews')
+plt.xlabel('Positive Reviews')
+plt.ylabel('Negative Reviews')
+plt.grid(True)
+plt.show()
+
+# Visualización del clustering para Peak Players vs Positive Reviews
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='peak_players', y='positive_reviews', hue='cluster', data=data_clean, palette='viridis', alpha=0.6)
+plt.title('Clustering K-Means: Peak Players vs Positive Reviews')
+plt.xlabel('Peak Players')
+plt.ylabel('Positive Reviews')
+plt.grid(True)
 plt.show()
